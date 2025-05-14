@@ -1,0 +1,202 @@
+<?php
+$questions = [
+  [
+    "question" => "What's your partner's favorite ice cream flavor?",
+    "options" => ["Chocolate", "Vanilla", "Strawberry", "Mint"],
+    "answerIndex" => 0
+  ],
+  [
+    "question" => "Where did you first meet?",
+    "options" => ["At school", "At a party", "Online", "At work"],
+    "answerIndex" => 2
+  ],
+  [
+    "question" => "What's your partner's dream vacation spot?",
+    "options" => ["Beach resort", "Mountains", "City tour", "Countryside"],
+    "answerIndex" => 0
+  ],
+  [
+    "question" => "Which movie genre does your partner love most?",
+    "options" => ["Romance", "Action", "Horror", "Comedy"],
+    "answerIndex" => 3
+  ],
+  [
+    "question" => "What's your partner's favorite color?",
+    "options" => ["Red", "Blue", "Green", "Purple"],
+    "answerIndex" => 1
+  ],
+  [
+    "question" => "What's your partner's favorite way to spend a weekend?",
+    "options" => ["Relaxing at home", "Going out with friends", "Traveling", "Sports & outdoors"],
+    "answerIndex" => 0
+  ],
+  [
+    "question" => "Which is your partner's go-to comfort food?",
+    "options" => ["Pizza", "Chocolate", "Ice cream", "Pasta"],
+    "answerIndex" => 1
+  ],
+  [
+    "question" => "What's a hobby your partner enjoys the most?",
+    "options" => ["Reading", "Dancing", "Gaming", "Cooking"],
+    "answerIndex" => 3
+  ]
+];
+
+$score = 0;
+$total = count($questions);
+$resultsReady = false;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $resultsReady = true;
+  foreach ($questions as $index => $q) {
+    if (isset($_POST["q$index"]) && $_POST["q$index"] == $q['answerIndex']) {
+      $score++;
+    }
+  }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Couple Game - How Well Do You Know Each Other?</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #cdb4db 0%, #e9d8fd 99%, #f3e8ff 100%);
+      font-family: 'Comfortaa', cursive;
+      color: #4b3b72;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .container {
+      background: #f7f0ffcc;
+      border-radius: 20px;
+      box-shadow: 0 10px 35px rgba(139, 92, 246, 0.3);
+      padding: 40px 60px;
+      max-width: 600px;
+      width: 95vw;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #8257e6;
+      text-shadow: 0 2px 8px #b19cd9cc;
+    }
+
+    form {
+      text-align: left;
+    }
+
+    .question-block {
+      margin-bottom: 24px;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #6d5783;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      color: #4b3b72;
+      cursor: pointer;
+    }
+
+    input[type="radio"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    button.submit-btn {
+      background: #9f79ee;
+      border: none;
+      color: white;
+      padding: 15px 28px;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px #9f79eeaa;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      max-width: 320px;
+      margin: 20px auto 0 auto;
+      display: block;
+    }
+
+    button.submit-btn:hover {
+      background: #7f5edf;
+      box-shadow: 0 6px 20px #7f5edfcc;
+    }
+
+    .result {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #8257e6;
+      margin-top: 20px;
+    }
+    .message {
+      margin-top: 12px;
+      font-weight: 500;
+      color: #6d5783;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Couple Game <span aria-hidden="true">❤️</span></h1>
+  <?php if (!$resultsReady): ?>
+    <form method="POST" action="">
+      <?php foreach ($questions as $index => $q): ?>
+        <div class="question-block">
+          <div class="question-text"><?= ($index + 1) . '. ' . htmlspecialchars($q['question']); ?></div>
+          <?php foreach ($q['options'] as $optIndex => $option): ?>
+            <label>
+              <input type="radio" name="q<?= $index ?>" value="<?= $optIndex ?>" required />
+              <?= htmlspecialchars($option); ?>
+            </label>
+          <?php endforeach; ?>
+        </div>
+      <?php endforeach; ?>
+      <button type="submit" class="submit-btn" aria-label="Submit Answers and Show Result">Submit</button>
+    </form>
+  <?php else: ?>
+    <?php
+      $percentage = round(($score / $total) * 100);
+      $message = '';
+      if ($percentage === 100) {
+        $message = "Perfect Match! You know each other like best friends! 💕";
+      } elseif ($percentage >= 75) {
+        $message = "Great Job! Your love is strong and deep. ❤️";
+      } elseif ($percentage >= 50) {
+        $message = "Good! But there's always more to learn about each other. 💖";
+      } else {
+        $message = "Keep growing your bond! Love is a journey. 🌹";
+      }
+    ?>
+    <div class="result">Your Score: <?= $score ?> / <?= $total ?> (<?= $percentage ?>%)</div>
+    <div class="message"><?= htmlspecialchars($message) ?></div>
+    <form method="GET" action="">
+      <button type="submit" class="submit-btn" aria-label="Play Again Button">Play Again</button>
+    </form>
+  <?php endif; ?>
+  </div>
+</body>
+</html>
+
