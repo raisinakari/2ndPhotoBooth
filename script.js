@@ -10,15 +10,15 @@
   const frames = [
     {
       name: 'Neon Glow',
-      src: 'https://i.ibb.co/G5dDZM5/frame1.png'
+      src: ''
     },
     {
       name: 'Polaroid',
-      src: 'https://i.ibb.co/FWJp96Y/frame2.png'
+      src: ''
     },
     {
       name: 'Comic Pop',
-      src: 'https://i.ibb.co/z4nmnNS/frame3.png'
+      src: ''
     }
   ];
 
